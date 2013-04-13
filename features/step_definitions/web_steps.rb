@@ -41,6 +41,35 @@ Given /^the blog is set up$/ do
                 :profile_id => 1,
                 :name => 'admin',
                 :state => 'active'})
+  User.create!({:login => 'nonadmin',
+                :password => '12345',
+                :email => 'nonadmin@snow.com',
+                :profile_id => 2,
+                :name => 'blog publisher',
+                :state => 'active'})
+
+   Article.create!({:id => 2,
+                   :type => 'Article',
+                   :title => 'Hello everyone',
+                   :author => 'admin',
+                   :body => 'Welcome everyone. This is my first article on this blog.',
+                   :extended => '',
+                   :excerpt => '',
+                   :created_at => '2012-11-28 09:55:00 UTC',
+                   :updated_at => '2012-11-28 09:55:00 UTC',
+                   :user_id => 3,
+                   :permalink => 'hello-everyone',
+                   :guid => '1bf3e2ca-ed7b-4562-8a4a-8ce843882222',
+                   :text_filter_id => 5,
+                   :whiteboard => '',
+                   :name => '',
+                   :published => true,
+                   :allow_pings => true,
+                   :allow_comments => true,
+                   :published_at => '2012-11-28 09:58:00 UTC',
+                   :state => 'published',
+                   :settings => {'password' => nil},
+                   :post_type => "read"})
 end
 
 And /^I am logged into the admin panel$/ do
@@ -54,7 +83,17 @@ And /^I am logged into the admin panel$/ do
     assert page.has_content?('Login successful')
   end
 end
-
+And /^I am logged into the admin panel as blog publisher$/ do
+  visit '/accounts/login'
+  fill_in 'user_login', :with => 'nonadmin'
+  fill_in 'user_password', :with => '12345'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }

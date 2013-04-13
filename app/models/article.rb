@@ -61,6 +61,13 @@ class Article < Content
 
   setting :password,                   :string, ''
 
+  def merge_with(other_article_id)
+    other = Article.find_by_id(other_article_id)
+    self.body += other.body
+    self.comments += other.comments
+    return self
+  end
+
   def initialize(*args)
     super
     # Yes, this is weird - PDC
@@ -96,19 +103,18 @@ class Article < Content
 
   class << self
 
-    def merge_with (other_article_id)
-    unless other = Article.find_by_id(other_article_id)
-      return false
-    end
-    self.body += other.body
-    other.comments.each do |comment|
-      comment.article_id = self.id
-      comment.save!
-    end
-    self.save!
-    Article.find(other.id).destroy
-    return self
-  end
+   # def merge_with (other_article_id)
+   # other = Article.find_by_id(other_article_id)
+   # original_article = self.dup
+   # original_article.body += other.body
+   # original_article.save!
+    #other.comments.each do |comment|
+    #  comment.article_id = original.id
+    #  comment.save!
+    #end
+    #original_article.save!
+    #return original_article
+ # end
 
     def last_draft(article_id)
       article = Article.find(article_id)

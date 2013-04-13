@@ -4,3 +4,11 @@
   <%= render :partial => "form" %>
 
 <% end %>
+
+<% if @article && @article.id && current_user.admin? %>
+   <%= form_tag("/admin/content/merge/#{@article.id}", :id => "#{form_type}_form", :enctype => "multipart/form-data", :class => className) do %>
+   
+     <%= render :partial => "merge", :source_id => @article.id %>
+   
+   <% end %>
+-<% end %>

@@ -37,6 +37,19 @@ class Admin::ContentController < Admin::BaseController
     new_or_edit
   end
 
+  def merge
+    origin_article=Article.find_by_id(params[:id])
+    @article = origin_article.merge_with(params[:merge_with])
+    if @article.save
+        destroy_the_draft unless @article.draft
+        set_article_categories
+        set_the_flash
+        redirect_to :action => 'index'
+        Article.find_by_id(params[:merge_with]).destroy
+        return
+    end
+  end
+
   def destroy
     @record = Article.find(params[:id])
 
@@ -139,7 +152,7 @@ class Admin::ContentController < Admin::BaseController
 
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
-  def new_or_edit
+  def new_or_edit 
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
@@ -189,6 +202,8 @@ class Admin::ContentController < Admin::BaseController
       flash[:notice] = _('Article was successfully created')
     when 'edit'
       flash[:notice] = _('Article was successfully updated.')
+    when 'merge'
+      flash[:notice] = _('Articles were successfully merged.')
     else
       raise "I don't know how to tidy up action: #{params[:action]}"
     end
@@ -240,21 +255,21 @@ class Admin::ContentController < Admin::BaseController
   def setup_resources
     @resources = Resource.by_created_at
   end
+  
+# def merge
+#    if not current_user.admin?
+#      redirect_to :action => 'index'
+#      flash[:error] = _("Error, you are not allowed to perform this action")
+#      return
+#    end
+#    @article = Article.find(params[:id])
+#    if @article.merge_with(params[:merge_with])
+#      flash[:notice] = _("Articles successfully merged.")
+#      redirect_to :action => 'index'
+#    else
+#      flash[:notice] = ("Wrong Article ID.")
+#      redirect_to :action => 'edit'
+#    end
 
- def merge
-    if not current_user.admin?
-      redirect_to :action => 'index'
-      flash[:error] = _("Error, you are not allowed to perform this action")
-      return
-    end
-    @article = Article.find(params[:id])
-    if @article.merge_with(params[:merge_with])
-      flash[:notice] = _("Articles successfully merged.")
-      redirect_to :action => 'index'
-    else
-      flash[:notice] = ("Wrong Article ID.")
-      redirect_to :action => 'edit'
-    end
-
- end
+# end
 end
