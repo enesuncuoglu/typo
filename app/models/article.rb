@@ -95,6 +95,21 @@ class Article < Content
   include Article::States
 
   class << self
+
+    def merge_with (other_article_id)
+    unless other = Article.find_by_id(other_article_id)
+      return false
+    end
+    self.body += other.body
+    other.comments.each do |comment|
+      comment.article_id = self.id
+      comment.save!
+    end
+    self.save!
+    Article.find(other.id).destroy
+    return self
+  end
+
     def last_draft(article_id)
       article = Article.find(article_id)
       while article.has_child?

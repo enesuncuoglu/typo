@@ -240,4 +240,21 @@ class Admin::ContentController < Admin::BaseController
   def setup_resources
     @resources = Resource.by_created_at
   end
+
+ def merge
+    if not current_user.admin?
+      redirect_to :action => 'index'
+      flash[:error] = _("Error, you are not allowed to perform this action")
+      return
+    end
+    @article = Article.find(params[:id])
+    if @article.merge_with(params[:merge_with])
+      flash[:notice] = _("Articles successfully merged.")
+      redirect_to :action => 'index'
+    else
+      flash[:notice] = ("Wrong Article ID.")
+      redirect_to :action => 'edit'
+    end
+
+ end
 end
