@@ -19,7 +19,8 @@ module NavigationHelpers
       '/admin/content/new'
     when /the edit page of article (\d+)/
       "/admin/content/edit/#{$1}"
-
+    when /the preview page of article (\d+)/
+      "/admin/previews/#{$1}"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
