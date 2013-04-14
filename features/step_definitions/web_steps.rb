@@ -47,29 +47,6 @@ Given /^the blog is set up$/ do
                 :profile_id => 2,
                 :name => 'blog publisher',
                 :state => 'active'})
-
-   Article.create!({:id => 2,
-                   :type => 'Article',
-                   :title => 'Hello everyone',
-                   :author => 'admin',
-                   :body => 'Welcome everyone. This is my first article on this blog.',
-                   :extended => '',
-                   :excerpt => '',
-                   :created_at => '2012-11-28 09:55:00 UTC',
-                   :updated_at => '2012-11-28 09:55:00 UTC',
-                   :user_id => 3,
-                   :permalink => 'hello-everyone',
-                   :guid => '1bf3e2ca-ed7b-4562-8a4a-8ce843882222',
-                   :text_filter_id => 5,
-                   :whiteboard => '',
-                   :name => '',
-                   :published => true,
-                   :allow_pings => true,
-                   :allow_comments => true,
-                   :published_at => '2012-11-28 09:58:00 UTC',
-                   :state => 'published',
-                   :settings => {'password' => nil},
-                   :post_type => "read"})
 end
 
 And /^I am logged into the admin panel$/ do
